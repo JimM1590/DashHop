@@ -1,0 +1,117 @@
+name: "Head-unit compatibility / bug report"
+description: "Report a DashHop preview issue or head-unit compatibility result"
+title: "[Compatibility] "
+labels: ["compatibility"]
+body:
+  - type: markdown
+    attributes:
+      value: "Thank you for testing DashHop. Please test and collect logs while safely parked. Do not post sensitive device identifiers or personal information."
+  - type: checkboxes
+    id: safe
+    attributes:
+      label: Safe testing
+      options:
+        - label: "I tested while safely parked or in another safe testing situation."
+          required: true
+  - type: input
+    id: version
+    attributes:
+      label: DashHop version
+      placeholder: "e.g. 0.3 preview"
+    validations:
+      required: true
+  - type: input
+    id: headunit
+    attributes:
+      label: Head-unit brand / model
+      placeholder: "Brand and model, or unknown"
+  - type: input
+    id: android
+    attributes:
+      label: Android version
+      placeholder: "e.g. 11"
+  - type: input
+    id: hardware
+    attributes:
+      label: CPU / platform (if known)
+      placeholder: "e.g. SM4250"
+  - type: input
+    id: resolution
+    attributes:
+      label: Screen resolution / orientation
+      placeholder: "e.g. 1280x720 landscape"
+  - type: input
+    id: launcher
+    attributes:
+      label: Current HOME launcher
+      placeholder: "e.g. AGAMA"
+  - type: input
+    id: vendor
+    attributes:
+      label: CANBUS / firmware vendor (optional)
+      placeholder: "e.g. XYAuto, unknown"
+  - type: dropdown
+    id: layout
+    attributes:
+      label: DashHop layout
+      options:
+        - Dock only
+        - Main
+        - Main + Side
+        - Main + Two
+        - Other / unknown
+  - type: textarea
+    id: assignments
+    attributes:
+      label: Apps assigned to each window
+      placeholder: "Main: Maps; Side: climate; etc."
+  - type: dropdown
+    id: symptom
+    attributes:
+      label: Primary symptom
+      options:
+        - App failed to launch
+        - App opened full-screen rather than in-panel
+        - App rendered incorrectly / resized incorrectly
+        - Focus / Back / touch issue
+        - Dock visibility / persistence
+        - Crash / hang
+        - Phone / notification / Android Auto
+        - Other
+    validations:
+      required: true
+  - type: checkboxes
+    id: interactions
+    attributes:
+      label: Relevant conditions
+      options:
+        - label: "Android Auto was active"
+        - label: "Reverse camera was involved"
+        - label: "Phone call was involved"
+        - label: "Notification was involved"
+        - label: "Issue occurred after ACC sleep / wake"
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      placeholder: "1. ... 2. ... 3. ..."
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected vs. actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Screenshots, video, logs and diagnostic ID (optional)
+      description: "Attach sanitized files only. Prefer sharing the DashHop Device ID privately if it could link your reports; do not include hardware serial/IMEI/VIN/location or personal content."
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy check
+      options:
+        - label: "I checked attachments and text for private data and credentials."
+          required: true
