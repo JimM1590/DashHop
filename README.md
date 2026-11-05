@@ -69,4 +69,12 @@ See [SECURITY.md](SECURITY.md) for reporting and privacy guidance.
 - TempTango and other third-party mini tools are separately maintained, installed, and updated.
 - The repository retains its [MIT license](LICENSE) for original material that can be licensed under MIT. Third-party code/assets must be reviewed for their own license conditions before distribution.
 
-**Roadmap ideas, not current features:** larger/accessible icon scaling, broader portrait-screen layouts, and an OBD Mini that displays read-only information from compatible external diagnostic applications.
+## Future MiniTool developer hooks
+
+DashHopper plans to expand beyond its existing, tested HVAC quick-control action with an **optional, vendor-neutral MiniTool integration API**. The proposed design supports two models: developer-owned compact Activities that DashHopper can discover and launch, and DashHopper-owned mini dashboards that display data from other applications through documented, authorized APIs.
+
+The existing `org.dashhop.intent.action.HVAC_QUICK_CONTROL` contract will remain supported. A generic MiniTool action, SDK, provider metadata, and data-feed protocol are **design proposals, not features available in 2.1.2**.
+
+See the [MiniTool Integration Roadmap](docs/MINITOOL_INTEGRATION_ROADMAP.md) for the proposed hooks, developer considerations, security boundaries, and planned validation steps.
+
+**Other roadmap ideas, not current features:** larger/accessible icon scaling, broader portrait-screen layouts, and a read-only OBD Mini that uses compatible external diagnostic applications.
