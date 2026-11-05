@@ -1,0 +1,1 @@
+package android.content.res;public class Resources {final android.util.DisplayMetrics d;public Resources(android.util.DisplayMetrics d){this.d=d;}public android.util.DisplayMetrics getDisplayMetrics(){return d;}}

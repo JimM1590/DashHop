@@ -4,7 +4,7 @@
 
 DashHopper is a configurable, persistent quick-access dock for compatible Android aftermarket head units. It stays available above supported native apps and Android Auto receiver software, making it easy to open installed apps and compact utilities without replacing the vehicle's existing launcher.
 
-> **Status: 2.1.2 beta candidate.** Public beta APK/source packages have not yet been published in this repository. Compatibility is device-dependent; features described below are not guaranteed on every head unit.
+> **Status: 2.1.2 beta candidate.** The beta APK will appear under Releases after approval. Compatibility is device-dependent; features described below are not guaranteed on every head unit.
 
 ## What DashHopper does
 
@@ -29,11 +29,13 @@ If no compatible provider is selected and available, users need not display the 
 
 ## Tested environment and limitations
 
-Development and field testing have focused on an Android 11 aftermarket head unit (Qualcomm SM4250, 1280 × 720 landscape, XYAuto-style firmware) in a 2016 Jeep Cherokee KL.
+Development and field testing have focused on an Android 11 aftermarket head unit (Qualcomm SM4250, 1280 × 720 landscape, XYAuto-style firmware).
 
-Earlier field tests verified dock accessibility over wireless Android Auto and standalone Waze, including while driving, and successful launch/dismissal of an external HVAC mini Activity. Screenshots of the 2.1.2 candidate show the dock and native Audio, Notepad, Weather, and Calendar toolboxes over Android Auto. **Those screenshots are not comprehensive regression testing.**
+Earlier development builds demonstrated dock access over wireless Android Auto and standalone Waze, and launch and dismissal of an external HVAC mini Activity. Those results apply to the earlier builds and their tested firmware.
 
-The 2.1.2 build report records successful compilation, signing comparison, and 2,246 passing host assertions. Full device testing of keyboard dictation, media-session restoration, ACC sleep/wake, reboot persistence and all regressions is still in progress.
+The project owner installed and tested 2.1.2 on the Android 11 head unit and confirmed that the app, including Notepad Mini, works satisfactorily for this beta. The automated audit separately verified the build, signing certificate and 2,246 host assertions. Retention of saved Notepad Mini notes across a subsequent APK update remains unverified. Keyboard dictation, media-session restoration and ACC or reboot behavior can vary with the head unit.
+
+The APK declares Android 8.0 (API 26) as its minimum and targets Android 11 (API 30). Android 11 is the primary field test platform. Other releases, firmware and portrait layouts need device verification.
 
 Important limitations:
 
@@ -44,15 +46,36 @@ Important limitations:
 - Notepad dictation availability, offline operation, and audio interruptions are controlled by the installed keyboard and its speech provider.
 - DashHopper does not act as a full HOME launcher, embed arbitrary apps in resizable windows, operate a phone companion, or implement OBD/CANBUS communication.
 
+## Screenshots
+
+DashHopper 2.1.2 beta candidate running over Android Auto on an Android 11 aftermarket head unit. Selected navigation details have been obscured. The captures show the dock and toolboxes on the primary Android 11 test platform.
+
+### Persistent dock over Android Auto
+![DashHopper persistent dock over Android Auto](docs/screenshots/dashhopper-android-auto.png)
+
+### Audio Mini — Last Played
+![Audio Mini displaying remembered iHeartRadio playback](docs/screenshots/audio-mini-last-played.png)
+
+### Notepad Mini
+![Notepad Mini local note interface](docs/screenshots/notepad-mini.png)
+
+### Weather
+![Weather Mini with cached weather and connectivity status](docs/screenshots/weather-mini.png)
+
+Weather data by [Open-Meteo](https://open-meteo.com/), [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Values are shown in Fahrenheit.
+
+### Calendar
+![DashHopper Calendar mini window](docs/screenshots/calendar-mini.png)
+
 ## Safety
 
-Configure the dock, edit notes, test features, and review diagnostic information **while safely parked**. Do not use controls or watch content that diverts attention from driving. A user-selected parked checkbox is not proof that the vehicle is stationary. DashHopper does not override factory reverse-camera, telephone, or safety systems.
+Configure the dock, edit notes, test features, and review diagnostic information **while safely parked**. Do not use controls or watch content that diverts attention from driving. A user-selected parked checkbox is not proof that the vehicle is stationary. Check overlay behavior with the reverse camera and incoming calls while safely parked. Firmware controls which surfaces take priority.
 
 ## Beta downloads
 
 There is **no published beta download yet**. When an approved, verified APK is available, it will appear under [Releases](../../releases), with version information, release notes, and a SHA-256 checksum. Do not treat an in-development build or screenshot as a published release.
 
-Please retain your existing launcher until you have confirmed compatibility with your head unit. For updates, install a release signed by the same developer identity; do not uninstall or clear app data unless release instructions explicitly say to.
+Keep your existing launcher installed. Install the official APK over an existing DashHopper installation signed by the same developer to retain app data. For instructions, optional permissions and troubleshooting, see [Installation and setup](docs/INSTALL.md). For a local build without private signing credentials, see [Building from source](docs/BUILD.md).
 
 ## Feedback and diagnostics
 
@@ -67,7 +90,7 @@ See [SECURITY.md](SECURITY.md) for reporting and privacy guidance.
 - Android application ID: `com.jmadsen.dashhop` (unchanged through the 2.1.2 development candidate).
 - Project branding: **DashHopper**, part of **JIM — Jim's Infotainment Management**.
 - TempTango and other third-party mini tools are separately maintained, installed, and updated.
-- The repository retains its [MIT license](LICENSE) for original material that can be licensed under MIT. Third-party code/assets must be reviewed for their own license conditions before distribution.
+- Original project code uses the [MIT license](LICENSE). See [third-party notices](THIRD_PARTY_NOTICES.md) for data, artwork and external services.
 
 ## Future MiniTool developer hooks
 

@@ -1,0 +1,1 @@
+package android.content; public abstract class Context {public abstract SharedPreferences getSharedPreferences(String n,int m);public abstract android.content.res.Resources getResources();public <T> T getSystemService(Class<T> type){return null;}public Context getApplicationContext(){return this;}public java.io.File getFilesDir(){throw new UnsupportedOperationException();}}

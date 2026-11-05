@@ -1,0 +1,5 @@
+package com.jmadsen.dashhop;
+/** Explicit network smoke test using the provider's public Berlin example coordinates. */
+public class LiveWeatherSmoke {
+ public static void main(String[] args)throws Exception {WeatherData data=new DirectOpenMeteoProvider().fetch(52.52,13.41,"Berlin API test");if(!Double.isFinite(data.temperature)||data.json.getJSONObject("hourly").getJSONArray("time").length()<24||data.json.getJSONObject("daily").getJSONArray("time").length()<7)throw new AssertionError("Invalid live forecast");if(!data.json.getJSONObject("current").has("apparent_temperature")||!data.json.getJSONObject("current").has("wind_speed_10m"))throw new AssertionError("Missing current feels-like or wind");if(args.length>0)java.nio.file.Files.write(java.nio.file.Paths.get(args[0]),data.json.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8));System.out.println("OBSERVED: production DirectOpenMeteoProvider retrieved and parsed current conditions, "+data.json.getJSONObject("hourly").getJSONArray("time").length()+" hourly rows and "+data.json.getJSONObject("daily").getJSONArray("time").length()+" daily rows over HTTPS. Host JVM, not head unit.");}
+}

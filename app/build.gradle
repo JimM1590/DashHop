@@ -1,0 +1,7 @@
+plugins { id 'com.android.application' }
+android {
+ namespace 'com.jmadsen.dashhop'
+ compileSdk 35
+ defaultConfig { applicationId 'com.jmadsen.dashhop'; minSdk 26; targetSdk 30; versionCode 20102; versionName '2.1.2' }
+ compileOptions { sourceCompatibility JavaVersion.VERSION_1_8; targetCompatibility JavaVersion.VERSION_1_8 }
+}

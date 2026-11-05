@@ -1,11 +1,11 @@
 name: "Head-unit compatibility / bug report"
-description: "Report a DashHop preview issue or head-unit compatibility result"
+description: "Report a DashHopper beta issue or head-unit compatibility result"
 title: "[Compatibility] "
 labels: ["compatibility"]
 body:
   - type: markdown
     attributes:
-      value: "Thank you for testing DashHop. Please test and collect logs while safely parked. Do not post sensitive device identifiers or personal information."
+      value: "Thank you for testing DashHopper. Please test and collect logs while safely parked. Do not post sensitive device identifiers or personal information."
   - type: checkboxes
     id: safe
     attributes:
@@ -16,8 +16,8 @@ body:
   - type: input
     id: version
     attributes:
-      label: DashHop version
-      placeholder: "e.g. 0.3 preview"
+      label: DashHopper version
+      placeholder: "e.g. 2.1.2 beta, code 20102"
     validations:
       required: true
   - type: input
@@ -50,33 +50,28 @@ body:
     attributes:
       label: CANBUS / firmware vendor (optional)
       placeholder: "e.g. XYAuto, unknown"
-  - type: dropdown
-    id: layout
+  - type: input
+    id: dock
     attributes:
-      label: DashHop layout
-      options:
-        - Dock only
-        - Main
-        - Main + Side
-        - Main + Two
-        - Other / unknown
+      label: Dock edge and state
+      placeholder: "e.g. top, expanded"
   - type: textarea
     id: assignments
     attributes:
-      label: Apps assigned to each window
-      placeholder: "Main: Maps; Side: climate; etc."
+      label: Utility or app involved
+      placeholder: "e.g. Audio Mini with a local media app, or the selected HVAC provider"
   - type: dropdown
     id: symptom
     attributes:
       label: Primary symptom
       options:
         - App failed to launch
-        - App opened full-screen rather than in-panel
-        - App rendered incorrectly / resized incorrectly
+        - Utility popup layout / resize issue
         - Focus / Back / touch issue
         - Dock visibility / persistence
         - Crash / hang
-        - Phone / notification / Android Auto
+        - Audio Mini / media-session access
+        - Android Auto overlay compatibility
         - Other
     validations:
       required: true
@@ -107,7 +102,7 @@ body:
     id: logs
     attributes:
       label: Screenshots, video, logs and diagnostic ID (optional)
-      description: "Attach sanitized files only. Prefer sharing the DashHop Device ID privately if it could link your reports; do not include hardware serial/IMEI/VIN/location or personal content."
+      description: "Attach sanitized files only. Prefer sharing the DashHopper installation ID privately if it could link your reports; do not include hardware serial/IMEI/VIN/location or personal content."
   - type: checkboxes
     id: privacy
     attributes:

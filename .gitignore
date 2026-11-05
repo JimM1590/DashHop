@@ -33,3 +33,20 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+# Private signing, local credentials and device exports
+*.p12
+*.pfx
+*.pem
+*.key
+*.idsig
+keystore.properties
+signing.properties
+.env
+.env.*
+*.log.txt
+*.db
+*.db-wal
+*.db-shm
+*.img
+*.bin

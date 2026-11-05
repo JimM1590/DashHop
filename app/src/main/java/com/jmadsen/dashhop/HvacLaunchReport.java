@@ -1,0 +1,11 @@
+package com.jmadsen.dashhop;
+import java.util.*;
+/** Request diagnostics only. No field or method can assert that an external popup appeared. */
+final class HvacLaunchReport {
+ String selectedPackage="",resolvedComponent="",discovery="NOT_CHECKED",discoveryException="",quickException="",fallback="",normalComponent="",normalException="",result="NOT_ATTEMPTED";
+ boolean quickAttempted;Boolean quickAccepted,normalAccepted;
+ final String timestamp=java.time.Instant.now().toString();
+ static String accepted(Boolean value){return value==null?"Not attempted":value?"Yes (request only)":"No";}
+ String text(){return "Test HVAC Quick Control\n"+timestamp+"\nSelected HVAC package: "+(selectedPackage.isEmpty()?"Not selected":selectedPackage)+"\nCompatible quick Activity: "+("FOUND".equals(discovery)?"Yes":"NOT_FOUND".equals(discovery)?"No":discovery)+"\nResolved Activity component: "+(resolvedComponent.isEmpty()?"None":resolvedComponent)+"\nQuick-launch attempted: "+(quickAttempted?"Yes":"No")+"\nAndroid accepted quick request: "+accepted(quickAccepted)+"\nDiscovery exception: "+(discoveryException.isEmpty()?"None":discoveryException)+"\nQuick-launch exception: "+(quickException.isEmpty()?"None":quickException)+"\nFallback condition: "+(fallback.isEmpty()?"None":fallback)+"\nNormal component: "+(normalComponent.isEmpty()?"None":normalComponent)+"\nAndroid accepted normal request: "+accepted(normalAccepted)+"\nNormal-launch exception: "+(normalException.isEmpty()?"None":normalException)+"\nResult: "+result+"\nPopup appearance: UNVERIFIED — confirm on the head unit.";}
+ Map<String,Object> fields(){Map<String,Object> m=new LinkedHashMap<>();m.put("hvac_selected_package",selectedPackage);m.put("hvac_resolved_component",resolvedComponent);m.put("hvac_discovery",discovery);m.put("hvac_discovery_exception",discoveryException);m.put("hvac_quick_attempted",quickAttempted);m.put("hvac_quick_request_accepted",quickAccepted);m.put("hvac_quick_exception",quickException);m.put("hvac_fallback_condition",fallback);m.put("hvac_normal_component",normalComponent);m.put("hvac_normal_request_accepted",normalAccepted);m.put("hvac_normal_exception",normalException);m.put("hvac_dispatch_result",result);m.put("hvac_popup_verified",false);return m;}
+}

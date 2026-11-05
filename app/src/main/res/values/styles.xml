@@ -1,0 +1,10 @@
+<resources>
+    <!-- Settings must always have a visible manifest theme. The ordinary launcher
+         remains DockStartActivity with Theme.NoDisplay and immediately finishes. -->
+    <style name="DashHopperSettingsTheme" parent="android:style/Theme.Material.NoActionBar">
+        <item name="android:windowNoDisplay">false</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowDisablePreview">true</item>
+        <item name="android:windowBackground">#0D1822</item>
+    </style>
+</resources>

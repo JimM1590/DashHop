@@ -1,31 +1,23 @@
-# DashHop <version>
+# DashHopper <version> Beta
 
-> **Preview / prerelease** — for parked testing on supported aftermarket Android head units. Not guaranteed compatible with all firmware.
+Parked testing on compatible aftermarket Android head units.
 
 ## Download
 
-- APK: `DashHop-<version>.apk` (attach to this GitHub Release)
-- SHA-256: `<hash>`
+- APK file and SHA-256
+- Version name, version code and package
+- Source link at the release tag
 
-## What's changed
-- 
+## Changes
 
-## Confirmed tested configuration
-- Android:
-- Head-unit model / firmware:
-- SoC / resolution:
-- Android Auto host (if tested):
-- Dock modes / window configurations verified:
+- User-visible changes
+- Upgrade and permission notes
 
-## Known limitations
-- 
-- App window hosting may fall back to full-screen, depending on firmware.
+## Compatibility and verification
 
-## Feedback requested
-- Dock persistence and auto-minimization
-- App launching and window placement
-- Focus, Back, touch input and resize
-- ACC sleep/wake
-- Reverse camera / calls / Android Auto
+- Android minimum and primary device configuration
+- Checks performed on this artifact
+- Existing field observations and pending tests
+- Known firmware, overlay, media, weather and input limitations
 
-Please test while safely parked, keep a working launcher installed, and use the compatibility issue template. Remove personal data from logs before attaching.
+Use the compatibility issue template and review diagnostics for personal data before attaching.

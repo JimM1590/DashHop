@@ -1,0 +1,24 @@
+package com.jmadsen.dashhop;
+import android.content.*;import android.os.*;import android.util.AtomicFile;import org.json.*;import java.io.*;import java.nio.charset.StandardCharsets;import java.util.*;import java.util.concurrent.*;
+final class WeatherRepository {
+ interface Listener{void changed();}
+ static WeatherRepository instance;static synchronized WeatherRepository get(Context c){if(instance==null)instance=new WeatherRepository(c);return instance;}
+ final Context c;final ShortcutRepository repo;final Handler h=new Handler(Looper.getMainLooper());final ExecutorService worker=Executors.newSingleThreadExecutor();final Set<Listener> listeners=new HashSet<>();final AtomicFile cache;
+ WeatherData data;String requestKey="",error="";boolean loading;long nextTry,lastAttempt;int failures;final Runnable tick=()->refresh(false);
+ WeatherRepository(Context c){this.c=c.getApplicationContext();repo=new ShortcutRepository(c);cache=new AtomicFile(new File(c.getFilesDir(),"weather-cache.json"));try{JSONObject j=new JSONObject(new String(cache.readFully(),StandardCharsets.UTF_8));requestKey=j.getString("key");data=new WeatherData(j.getJSONObject("data"),j.getString("place"),j.getLong("fetched"));}catch(Exception ignored){}}
+ String key(){return "v4:"+repo.str("weatherAccess","evaluation")+":"+repo.num("weatherCredentialRevision",0)+":"+repo.str("weatherLat","")+","+repo.str("weatherLon","");}
+ boolean located(){try{DirectOpenMeteoProvider.coordinates(Double.parseDouble(repo.str("weatherLat","")),Double.parseDouble(repo.str("weatherLon","")));return true;}catch(Exception e){return false;}}
+ boolean iconAvailable(){return data!=null&&!phone()&&located()&&key().equals(requestKey);}
+ boolean phone(){return repo.str("weatherSource","direct").equals("phone");}
+ void add(Listener l){listeners.add(l);refresh(false);}void remove(Listener l){listeners.remove(l);if(listeners.isEmpty())h.removeCallbacks(tick);}
+ void notifyViews(){for(Listener l:new ArrayList<>(listeners))l.changed();}
+ void refresh(boolean manual){h.removeCallbacks(tick);if(repo.str("weatherAccess","evaluation").equals("commercial")&&repo.str("weatherApiKey","").isEmpty()){error="Set your licensed commercial weather API key in Settings";notifyViews();return;}if(phone()){error="Connect / pair phone — companion support is not available yet";notifyViews();return;}if(!located()){error="Choose a city, coordinates or authorized device location";notifyViews();return;}if(error.startsWith("Connect / pair")||error.startsWith("Choose a city"))error="";String key=key();if(!key.equals(requestKey)){data=null;requestKey=key;failures=0;nextTry=0;}
+ long now=System.currentTimeMillis();if(loading)return;if(manual&&now-lastAttempt<10000){notifyViews();if(!listeners.isEmpty())h.postDelayed(tick,Math.max(1000,nextTry-now));return;}
+ long due=nextTry>0?nextTry:data==null?0:data.fetched+1800000L;if(!manual&&now>=0&&now<due&&!(data!=null&&data.fetched>now)){notifyViews();if(!listeners.isEmpty())h.postDelayed(tick,Math.max(1000,due-now));return;}
+ loading=true;lastAttempt=now;error="";notifyViews();double lat=Double.parseDouble(repo.str("weatherLat","")),lon=Double.parseDouble(repo.str("weatherLon",""));String place=repo.str("weatherPlace","Selected location");final String startedKey=key;
+ worker.execute(()->{WeatherData result=null;Exception failed=null;try{result=new DirectOpenMeteoProvider(repo.str("weatherAccess","evaluation").equals("commercial"),repo.str("weatherApiKey","")).fetch(lat,lon,place);}catch(Exception e){failed=e;}final WeatherData value=result;final Exception problem=failed;h.post(()->{loading=false;if(!startedKey.equals(key())||phone()){if(!listeners.isEmpty())refresh(false);return;}
+ if(value!=null){data=value;failures=0;nextTry=value.fetched+1800000L;error="";try{JSONObject j=new JSONObject();j.put("key",startedKey);j.put("place",place);j.put("fetched",value.fetched);j.put("data",value.json);FileOutputStream out=null;try{out=cache.startWrite();out.write(j.toString().getBytes(StandardCharsets.UTF_8));cache.finishWrite(out);}catch(Exception e){if(out!=null)cache.failWrite(out);throw e;}}catch(Exception e){Diagnostics.error("weather_cache_write_failed",e);}Diagnostics.status("weather_last_success",java.time.Instant.ofEpochMilli(value.fetched).toString());Diagnostics.status("weather_http_status",200);Diagnostics.info("weather_refresh_succeeded");}
+ else {failures++;nextTry=System.currentTimeMillis()+Math.min(1800000L,60000L*(1L<<Math.min(5,failures-1)));error="Weather unavailable — check internet connection";if(problem instanceof DirectOpenMeteoProvider.HttpError)Diagnostics.status("weather_http_status",((DirectOpenMeteoProvider.HttpError)problem).status);Diagnostics.error("weather_refresh_failed",problem);}
+ notifyViews();if(!listeners.isEmpty())h.postDelayed(tick,Math.max(1000,nextTry-System.currentTimeMillis()));});});
+ }
+}

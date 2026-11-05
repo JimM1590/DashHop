@@ -1,0 +1,25 @@
+package com.jmadsen.dashhop;
+import android.content.*;import android.content.res.Resources;import android.util.DisplayMetrics;import java.util.*;
+/** Executes production repository/policy with a memory-only Android preference adapter.
+ * Does not simulate Android UI, disk persistence or Activity/service lifecycle. */
+public class RepositoryPolicyTest {
+ static int checks;static void check(boolean value,String description){checks++;if(!value)throw new AssertionError(description);}
+ static class Memory implements SharedPreferences,SharedPreferences.Editor {
+ final Map<String,Object> map=new HashMap<>();
+ public String getString(String k,String d){return (String)map.getOrDefault(k,d);}public int getInt(String k,int d){return (Integer)map.getOrDefault(k,d);}public float getFloat(String k,float d){return (Float)map.getOrDefault(k,d);}public long getLong(String k,long d){return (Long)map.getOrDefault(k,d);}public boolean getBoolean(String k,boolean d){return (Boolean)map.getOrDefault(k,d);}public boolean contains(String k){return map.containsKey(k);}public Editor edit(){return this;}
+ public Editor putString(String k,String v){map.put(k,v);return this;}public Editor putInt(String k,int v){map.put(k,v);return this;}public Editor putFloat(String k,float v){map.put(k,v);return this;}public Editor putLong(String k,long v){map.put(k,v);return this;}public Editor putBoolean(String k,boolean v){map.put(k,v);return this;}public Editor clear(){map.clear();return this;}public void apply(){}public boolean commit(){return true;}
+ }
+ static class Device extends Context {final Memory p=new Memory();final DisplayMetrics d=new DisplayMetrics();public SharedPreferences getSharedPreferences(String n,int mode){return p;}public Resources getResources(){return new Resources(d);}}
+ public static void main(String[] ignored){
+ Device fresh=new Device();ShortcutRepository r=new ShortcutRepository(fresh);
+ check(r.preset().equals("two"),"Retained legacy preset default");check(!r.flag("mainRight",false),"Retained legacy direction preference");check(r.panel(0).equals("empty")&&r.panel(1).equals("empty")&&r.panel(2).equals("empty"),"Legacy panel settings remain unassigned");check(r.str("home","").equals(WorkspacePolicy.DASHBOARD),"Legacy Home token retained for routing to Android Home");check(!r.flag("homeChoicePending",false),"No upgrade prompt on fresh install");
+ Device upgrade=new Device();upgrade.p.putString("home","com.example/.Projection").putString("apps","[\"com.example/.HVAC\",\"com.example/.Files\"]").putString("edge","bottom").putInt("horizontalPx",110).putInt("handle",592).putInt("color",0xff123456).putInt("opacity",80).putBoolean("hidden",true).apply();ShortcutRepository old=new ShortcutRepository(upgrade);
+ check(old.str("home","").equals("com.example/.Projection"),"Existing Home component preserved");check(old.str("apps","").equals("[\"com.example/.HVAC\",\"com.example/.Files\"]"),"Raw shortcut identity and order preserved");check(old.num("horizontalDp",0)==110,"Thickness conversion at density 1");check(old.num("color",0)==0xff123456&&old.num("opacity",0)==80,"Appearance preserved");check(old.flag("hidden",false),"Collapsed state preserved");check(old.flag("homeChoicePending",false),"User gets keep/change choice");check(Math.abs(old.fraction("bottom")-.5f)<.001,"Legacy handle migrated to relative edge position");
+ old.fraction("left",.2f);old.fraction("right",.8f);check(Math.abs(old.fraction("left")-.2f)<.001&&Math.abs(old.fraction("right")-.8f)<.001,"Independent edge positions");
+ old.panel(0,"calendar");old.panel(1,"app:com.example/.OBD");old.set("preset","side");check(old.panel(0).equals("empty"),"New preset independently unassigned");old.panel(0,"shortcuts");old.set("preset","two");check(old.panel(0).equals("calendar")&&old.panel(1).startsWith("app:"),"Preset content restored");old.set("mainRight",true);check(old.panel(0).equals("calendar"),"Mirroring preserves semantic main assignment");new ShortcutRepository(upgrade);check(old.flag("mainRight",false)&&old.panel(0).equals("calendar"),"Migration idempotent");
+ check(WorkspacePolicy.count("single")==1&&WorkspacePolicy.count("side")==2&&WorkspacePolicy.count("two")==3,"Preset counts");
+ for(int available:new int[]{0,224,624,1184})for(float f:new float[]{0,.2f,.5f,1}){int offset=WorkspacePolicy.handleOffset(f,available);check(offset>=0&&offset<=available,"Handle stays on edge");if(available>0)check(Math.abs(WorkspacePolicy.handleFraction(offset,available)-f)<=1f/available,"Relative position round-trip across dimensions");}
+ check(WorkspacePolicy.fraction(Float.NaN)==.5f&&WorkspacePolicy.fraction(-1)==0&&WorkspacePolicy.fraction(2)==1,"Malformed position clamp");old.reset();check(old.panel(0).equals("empty")&&old.str("home","").equals(WorkspacePolicy.DASHBOARD),"Explicit reset clears preferences; legacy Home token is safely routed");
+ System.out.println("PASS: "+checks+" migration, preset isolation and handle geometry assertions. Host logic only; Android runtime untested.");
+ }
+}
